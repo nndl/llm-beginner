@@ -1,0 +1,7 @@
+torch>=2.0
+datasets>=2.14
+numpy>=1.23
+matplotlib>=3.5
+tqdm>=4.65
+pandas>=2.0
+pyarrow>=12.0

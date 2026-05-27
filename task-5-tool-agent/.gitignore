@@ -1,0 +1,7 @@
+data/cache/
+src/__pycache__/
+src/tools/__pycache__/
+eval/__pycache__/
+eval/result.json
+*.pyc
+.venv/

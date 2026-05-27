@@ -1,0 +1,12 @@
+torch>=2.0
+transformers>=4.40
+sentence-transformers>=2.7
+faiss-cpu>=1.7
+pypdf>=4.0
+numpy>=1.23
+pandas>=2.0
+tqdm>=4.65
+huggingface_hub>=0.20
+requests>=2.31
+# 可选：
+# ragas>=0.1

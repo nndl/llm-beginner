@@ -1,0 +1,10 @@
+data/cache/
+data/*.txt
+data/*.parquet
+data/*.bin
+ckpt/
+src/__pycache__/
+eval/__pycache__/
+eval/result.json
+*.pyc
+.venv/

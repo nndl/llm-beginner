@@ -1,0 +1,11 @@
+torch>=2.0
+transformers>=4.40
+datasets>=2.14
+accelerate>=0.27
+huggingface_hub>=0.20
+numpy>=1.23
+pandas>=2.0
+tqdm>=4.65
+# 以下两个仅作为对照/可选，不强制：
+# peft>=0.10
+# trl>=0.8

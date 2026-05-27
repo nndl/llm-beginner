@@ -1,0 +1,40 @@
+key: llm-agent
+title: 大模型与智能体
+subtitle: 从基础原理到系统构建与未来展望
+short_title: 大模型与智能体
+cover: /assets/covers/lma-cover-small.jpg
+url: /llm-agent/
+blurb: 围绕共用基础、大模型、智能体、边界与未来四条主线，系统讲解大模型与智能体的原理、构建与前沿。
+authors: 邱锡鹏
+publisher: 机械工业出版社
+year: 2026
+status: forthcoming
+repo: https://github.com/nndl/llm-beginner
+douban: null
+links: []
+parts:
+  - title: 共用基础
+    chapters:
+      - { num: 1, title: 大模型与智能体时代 }
+      - { num: 2, title: 神经网络与Transformer基础 }
+      - { num: 3, title: Transformer }
+  - title: 大模型
+    chapters:
+      - { num: 4, title: 预训练 }
+      - { num: 5, title: 后训练与对齐 }
+      - { num: 6, title: 训练系统 }
+      - { num: 7, title: 提示与思维链 }
+      - { num: 8, title: 多模态大模型 }
+      - { num: 9, title: 算力底座 }
+  - title: 智能体
+    chapters:
+      - { num: 10, title: 从大模型到智能体 }
+      - { num: 11, title: 工具检索与智能体接口 }
+      - { num: 12, title: 记忆规划与执行 }
+      - { num: 13, title: 智能体训练评测工程与治理 }
+      - { num: 14, title: 具身智能 }
+      - { num: 15, title: 科学智能 }
+  - title: 边界与未来
+    chapters:
+      - { num: 16, title: 风险与治理 }
+      - { num: 17, title: 未来智能系统 }

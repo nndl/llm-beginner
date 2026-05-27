@@ -1,0 +1,11 @@
+mcp>=0.9             # 官方 MCP Python SDK
+openai>=1.30         # 调本地模型的 OpenAI 兼容客户端
+gitpython>=3.1
+pytest>=7.0
+requests>=2.31
+pydantic>=2.0
+pyyaml>=6.0
+tqdm>=4.65
+# 可选对照：
+# qwen-agent>=0.0.10
+# smolagents>=0.1
