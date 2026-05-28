@@ -10,6 +10,16 @@ ROOT = Path(__file__).parent.parent
 sys.path.insert(0, str(ROOT))
 
 
+def load_dataset_info():
+    path = ROOT / "data" / "dataset_info.json"
+    if not path.exists():
+        return {"dataset": "unknown", "ppl_threshold": 200}
+    try:
+        return json.loads(path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError:
+        return {"dataset": "unknown", "ppl_threshold": 200}
+
+
 def test_tokenizer_roundtrip():
     from src.tokenizer import BPETokenizer
     tok_path = ROOT / "ckpt" / "tokenizer.json"
@@ -52,11 +62,13 @@ def test_perplexity():
     from src.model import load_for_eval
     ckpt = ROOT / "ckpt" / "best.pt"
     dev_path = ROOT / "data" / "dev.txt"
+    info = load_dataset_info()
+    threshold = float(info.get("ppl_threshold", 200))
     if not ckpt.exists():
         return {"test": "perplexity_on_dev", "pass": None, "skip": "ckpt/best.pt 不存在"}
     if not dev_path.exists():
         return {"test": "perplexity_on_dev", "pass": None,
-                "skip": "data/dev.txt 不存在；训练时请留出 dev split"}
+                "skip": "data/dev.txt 不存在；先跑 data/download.py，或训练时留出 dev split"}
     model, tok = load_for_eval(str(ckpt))
     model.eval()
     text = dev_path.read_text(encoding="utf-8")[:5000]
@@ -66,8 +78,10 @@ def test_perplexity():
     loss = torch.nn.functional.cross_entropy(
         logits[:, :-1].reshape(-1, logits.size(-1)), ids[:, 1:].reshape(-1))
     ppl = torch.exp(loss).item()
-    return {"test": "perplexity_on_dev", "pass": ppl < 200,
-            "perplexity": round(ppl, 2)}
+    return {"test": "perplexity_on_dev", "pass": ppl < threshold,
+            "perplexity": round(ppl, 2),
+            "threshold": threshold,
+            "dataset": info.get("dataset", "unknown")}
 
 
 def main():

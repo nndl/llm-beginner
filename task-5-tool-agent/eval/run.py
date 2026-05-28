@@ -1,11 +1,41 @@
 """任务五自检：工具单元测试 + 多工具任务成功率 + 错误恢复。"""
 import json
+import re
 import sys
 import traceback
 from pathlib import Path
 
 ROOT = Path(__file__).parent.parent
 sys.path.insert(0, str(ROOT))
+
+
+def normalize_answer(text):
+    text = str(text).lower()
+    text = text.replace(",", "").replace("，", "")
+    return re.sub(r"\s+", "", text)
+
+
+def answer_matches(answer, expected_keywords):
+    norm_answer = normalize_answer(answer)
+    for expected in expected_keywords:
+        if isinstance(expected, list):
+            if not any(normalize_answer(keyword) in norm_answer
+                       for keyword in expected):
+                return False
+        elif normalize_answer(expected) not in norm_answer:
+            return False
+    return True
+
+
+def extract_used_tools(trace):
+    used = []
+    for step in trace.get("steps", []) if isinstance(trace, dict) else []:
+        if not isinstance(step, dict):
+            continue
+        name = step.get("tool") or step.get("tool_name") or step.get("action")
+        if isinstance(name, str) and name:
+            used.append(name)
+    return used
 
 
 def test_tools_individual():
@@ -62,9 +92,24 @@ def test_multi_tool_success_rate():
     for t in tasks:
         try:
             trace = agent.run(t["task"])
-            ok = bool(trace.get("success"))
+            final_answer = trace.get("final_answer", "") if isinstance(trace, dict) else ""
+            expected = t.get("expected_answer_contains", [])
+            ok = answer_matches(final_answer, expected)
             success += int(ok)
-            details.append({"id": t["id"], "success": ok})
+            used_tools = extract_used_tools(trace)
+            expected_tools = t.get("expected_tools", [])
+            details.append({
+                "id": t["id"],
+                "success": ok,
+                "final_answer_preview": str(final_answer)[:120],
+                "expected_answer_contains": expected,
+                "expected_tools": expected_tools,
+                "used_tools": used_tools,
+                "used_expected_tools": all(
+                    any(expected_tool in used for used in used_tools)
+                    for expected_tool in expected_tools
+                ) if used_tools else None,
+            })
         except Exception as e:
             details.append({"id": t["id"], "success": False, "error": str(e)})
     rate = success / len(tasks)

@@ -4,7 +4,7 @@
 
 ## 目标
 
-用 PyTorch 从零搭一个 decoder-only mini-GPT，在中文小语料上预训练并自回归生成。**扩展**实践书 v2「nanoGPT 模型」的带读：加入 BPE、RoPE、KV cache，在中文数据上复现 TinyStories 的「涌现」现象。
+用 PyTorch 从零搭一个 decoder-only mini-GPT，先在中文小语料上预训练并自回归生成，进阶再切到 TinyStories 或中文故事语料观察小模型叙事能力。**扩展**实践书 v2「nanoGPT 模型」的带读：加入 BPE、RoPE、KV cache。
 
 ## 前置阅读
 
@@ -19,11 +19,14 @@
 ```bash
 pip install -r requirements.txt
 
-# 三档数据，按设备和目标选
+# 三档数据，按设备和目标选；不加参数默认使用 poetry，适合先跑通
+python data/download.py                         # ~1MB 唐诗 quick-start
 python data/download.py --dataset poetry        # ~1MB，CPU 即可，5 分钟跑通
-python data/download.py --dataset tinystories   # ~100MB，CPU 可训，看「涌现」
+python data/download.py --dataset tinystories   # 英文故事语料，CPU 可训，看小模型叙事能力
 python data/download.py --dataset skypile       # ~1GB+，建议 GPU
 ```
+
+脚本会统一生成 `data/train.txt`、`data/dev.txt` 和 `data/dataset_info.json`。训练代码可直接读取 `train.txt`，自检脚本用 `dev.txt` 计算困惑度；如果你自行换中文语料，也请保持这两个文件名。
 
 ## 实施步骤
 
@@ -53,7 +56,7 @@ python eval/run.py
 |---|---|
 | `tokenizer_roundtrip` | encode → decode 应还原中文文本（除已知 UTF-8 边界 case） |
 | `kv_cache_equivalence` | 开 KV cache 与不开的 logits 一致（误差 < 1e-4） |
-| `perplexity_on_dev` | dev set 困惑度（参考基线由数据集决定：唐诗 < 50，TinyStories < 10） |
+| `perplexity_on_dev` | dev set 困惑度；阈值从 `data/dataset_info.json` 读取（唐诗默认 < 50，TinyStories 默认 < 10） |
 
 ## AI Tutor 反馈
 

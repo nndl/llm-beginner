@@ -15,7 +15,7 @@
 2. BGE embedding + FAISS 索引
 3. 召回 + BGE reranker 精排
 4. 把召回内容拼 prompt 调 Qwen2.5-7B-Instruct 生成答案
-5. 在 CMRC 2018 上跑评测
+5. 在 `data/gold_qa.jsonl` 上跑 NNDL gold source 召回评测；gold QA 共 30 条，基于 `../神经网络与深度学习2/` LaTeX 正文设计，但索引应来自 `data/kb.pdf`
 
 ## 评审检查项
 
@@ -36,7 +36,9 @@
    - 上下文是否有去重 + 长度截断？
    - 是否引用源（让用户知道答案出处）？
 5. **评测**
-   - Recall@k 评测方式是否对（gold context 在召回中即算命中）？
+   - Recall@k / MRR 评测方式是否对（gold anchor 在召回 chunk 中即算命中）？
+   - 是否从 `data/kb.pdf` 构建索引，而不是直接索引 LaTeX 源文件绕过 PDF 抽取？
+   - 是否把检索质量和生成忠实性拆开报告，而不是用流畅答案掩盖召回失败？
    - 是否同时报告 faithfulness（答案是否忠于上下文）和 relevancy（答案是否回答了问题）？
 
 ### 加分项

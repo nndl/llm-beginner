@@ -3,10 +3,11 @@ title: 大模型与智能体
 subtitle: 从基础原理到系统构建与未来展望
 short_title: 大模型与智能体
 cover: /assets/covers/lma-cover-small.jpg
+pdf: https://github.com/nndl/nndl.github.io/releases/download/book-llm-agent/llm-agent.pdf
 url: /llm-agent/
 blurb: 围绕共用基础、大模型、智能体、边界与未来四条主线，系统讲解大模型与智能体的原理、构建与前沿。
 authors: 邱锡鹏
-publisher: 机械工业出版社
+publisher: 人民邮电出版社
 year: 2026
 status: forthcoming
 repo: https://github.com/nndl/llm-beginner

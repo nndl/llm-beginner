@@ -14,7 +14,7 @@
 1. 4 个工具：calculator / python_sandbox / file_search / wiki
 2. 手写 ReAct 循环（约 200 行）：Thought / Action / Action Input / Observation
 3. 调本地 Qwen2.5-7B-Instruct（通过 OpenAI 兼容 API）
-4. 在自建 10 题任务集上评测成功率
+4. 在自建 10 题任务集上评测答案关键词命中率，而不是只看 agent 自报 `success`
 
 ## 评审检查项
 
@@ -39,6 +39,7 @@
 5. **trace 记录**
    - 是否记录每步的 Thought / Action / Observation 全文，便于调试？
    - `success` 字段如何判定（是否过于宽松或严格）？
+   - 自检是否用 `expected_answer_contains` 或等价规则校验最终答案？同义表达（如 Turing / 图灵）是否按可接受变体处理？
 
 ### 加分项
 

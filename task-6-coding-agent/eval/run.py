@@ -41,12 +41,39 @@ def test_skill_loader_metadata():
             "missing_meta": [s.get("name", "?") for s in missing]}
 
 
+def test_toy_repo_patch():
+    from src.agent import CodingAgent
+    toy_repo = ROOT / "data" / "toy-repo"
+    issue_path = toy_repo / "ISSUE.md"
+    if not issue_path.exists():
+        return {"test": "toy_repo_patch", "pass": None,
+                "skip": "data/toy-repo 不存在；先跑 data/download.py"}
+
+    agent = CodingAgent()
+    issue = issue_path.read_text(encoding="utf-8")
+    trace = agent.run(repo_path=str(toy_repo), issue=issue)
+    test_run = subprocess.run(
+        [sys.executable, "-m", "pytest", "-q"],
+        cwd=toy_repo,
+        text=True,
+        capture_output=True,
+        timeout=60,
+    )
+    return {
+        "test": "toy_repo_patch",
+        "pass": test_run.returncode == 0,
+        "tests_passed": test_run.returncode == 0,
+        "pytest_output": (test_run.stdout + test_run.stderr)[-800:],
+        "trace_has_patch": bool(isinstance(trace, dict) and trace.get("patch")),
+    }
+
+
 def test_swebench_lite_sample():
     from src.agent import CodingAgent
     sample_path = ROOT / "data" / "swebench-lite-sample.parquet"
     if not sample_path.exists():
         return {"test": "swebench_lite_sample", "pass": None,
-                "skip": "data/swebench-lite-sample.parquet 不存在；先跑 data/download.py"}
+                "skip": "data/swebench-lite-sample.parquet 不存在；需要时跑 data/download.py --with-swebench"}
     try:
         import pandas as pd
         df = pd.read_parquet(sample_path)
@@ -56,25 +83,35 @@ def test_swebench_lite_sample():
     agent = CodingAgent()
     passed = 0
     results = []
+    attempted = 0
     for _, row in df.iterrows():
+        repo_path = ROOT / "data" / "repos" / row["repo"].split("/")[-1]
+        if not repo_path.exists():
+            results.append({"id": row["instance_id"],
+                            "skip": f"repo 未 clone：{repo_path.relative_to(ROOT)}"})
+            continue
+        attempted += 1
         try:
-            trace = agent.run(repo_path=str(ROOT / "data" / "repos" / row["repo"].split("/")[-1]),
-                              issue=row["problem_statement"])
+            trace = agent.run(repo_path=str(repo_path), issue=row["problem_statement"])
             ok = bool(trace.get("tests_passed"))
             passed += int(ok)
             results.append({"id": row["instance_id"], "tests_passed": ok})
         except Exception as e:
             results.append({"id": row["instance_id"], "error": str(e)[:120]})
+    if attempted == 0:
+        return {"test": "swebench_lite_sample", "pass": None,
+                "skip": "已下载 SWE-bench 元数据，但 data/repos/ 下没有对应本地仓库",
+                "details": results}
 
     return {"test": "swebench_lite_sample",
-            "pass": passed >= 1, "passed": passed, "n": len(df),
+            "pass": passed >= 1, "passed": passed, "attempted": attempted, "n": len(df),
             "details": results}
 
 
 def main():
     results = []
     for fn in [test_mcp_server_lists_tools, test_skill_loader_metadata,
-               test_swebench_lite_sample]:
+               test_toy_repo_patch, test_swebench_lite_sample]:
         try:
             r = fn()
         except Exception as e:

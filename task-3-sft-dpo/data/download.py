@@ -23,17 +23,19 @@ def download_base_model():
 
 def hint_sft_data():
     print("\n--- MOSS-003-sft-data（SFT 数据）---")
-    print("HF：")
-    print("  pip install datasets")
-    print("  python -c \"from datasets import load_dataset; "
-          "ds = load_dataset('fnlp/moss-003-sft-data'); "
-          "ds.save_to_disk('./data/moss-sft')\"")
-    print("GitHub：https://github.com/OpenLMLab/MOSS  (数据集 release)")
+    print("HF 数据集：https://huggingface.co/datasets/OpenMOSS-Team/moss-003-sft-data")
+    print("推荐直接下载 jsonl.zip，避免 dataset viewer / 自动 builder 解析大文件失败：")
+    print("  huggingface-cli download OpenMOSS-Team/moss-003-sft-data "
+          "moss-003-sft-no-tools.jsonl.zip --repo-type dataset --local-dir ./data/moss-sft")
+    print("GitHub：https://github.com/OpenMOSS/MOSS  (数据集 release)")
 
 
 def hint_plugin_data():
     print("\n--- MOSS-003-sft-plugin（带工具调用对话，给任务五贯通用）---")
-    print("HF 路径：fnlp/moss-003-sft-plugin  （加载方式同上）")
+    print("同一 HF 数据集内含 with-tools 文件：OpenMOSS-Team/moss-003-sft-data")
+    print("  huggingface-cli download OpenMOSS-Team/moss-003-sft-data "
+          "moss-003-sft-with-tools-no-text2image.zip --repo-type dataset --local-dir ./data/moss-sft-plugin")
+    print("  # 若需要图像生成工具样例，可另取 moss-003-sft-with-tools-text2image.zip")
 
 
 def hint_dpo_data():

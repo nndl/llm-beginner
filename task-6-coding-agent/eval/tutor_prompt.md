@@ -17,7 +17,7 @@
 4. **主 agentic loop**：`while not done: model → tool → observation → loop`
 
 基座模型：Qwen2.5-Coder-7B-Instruct（本地部署）。
-评测：SWE-bench Lite 抽样。
+评测：先通过本地 `data/toy-repo` 的确定性修 bug 测试，再把 SWE-bench Lite 抽样作为可选进阶。
 
 ## 评审检查项
 
@@ -42,6 +42,9 @@
 5. **代码沙箱**
    - 跑测试时是否在隔离环境（subprocess + 工作目录 + 超时）？
    - git_apply 失败时是否回滚？
+6. **评测可信度**
+   - 是否先在 toy repo 上真实修改代码并跑通 `python -m pytest`？
+   - SWE-bench 只下载元数据时，是否明确跳过而不是对不存在的 repo 报失败？
 
 ### 加分项
 

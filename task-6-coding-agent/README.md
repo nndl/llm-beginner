@@ -20,8 +20,11 @@
 ```bash
 pip install -r requirements.txt
 
-# 下载 SWE-bench Lite 抽样集 + 模型部署提示
+# 生成本地 toy repo + 模型部署提示
 python data/download.py
+
+# 可选：额外下载 SWE-bench Lite 抽样元数据；对应 repo 需另行 clone 到 data/repos/
+python data/download.py --with-swebench
 ```
 
 ## 能力三层栈
@@ -42,6 +45,7 @@ python data/download.py
    - `test-runner/SKILL.md`：测试运行与失败诊断
 4. **Subagent**（`src/subagents/`）：如把「代码搜索」和「测试执行」分给独立 subagent，主 agent 只看摘要
 5. **主 agent loop**（`src/agent.py`）：`while not done: model → tool → observation → loop`，支持调用 Skill、派发 Subagent
+6. **本地 smoke test**：先在 `data/toy-repo` 上修复一个确定性 bug，确认 agent 能读写文件、跑测试并产生 patch，再挑战 SWE-bench Lite
 
 ## 实现约定
 
@@ -61,7 +65,8 @@ python eval/run.py
 |---|---|
 | `mcp_server_lists_tools` | 启动 MCP server 后能枚举到 ≥ 5 个工具 |
 | `skill_loader_metadata` | SkillLoader.list_skills() 返回的每个 skill 都有 name + description |
-| `swebench_lite_sample` | 在 SWE-bench Lite 抽样 3 题上 ≥ 1 题 tests_passed（很难，跑通 1 题就合格） |
+| `toy_repo_patch` | 在 `data/toy-repo` 上修复 `calculator.add`，并让 `python -m pytest` 通过 |
+| `swebench_lite_sample` | 可选进阶：在 SWE-bench Lite 抽样 3 题上 ≥ 1 题 tests_passed（很难，跑通 1 题就合格） |
 
 ## AI Tutor 反馈
 

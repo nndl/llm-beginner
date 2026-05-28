@@ -2,6 +2,7 @@ data/cache/
 data/*.txt
 data/*.parquet
 data/*.bin
+data/*.json
 ckpt/
 src/__pycache__/
 eval/__pycache__/

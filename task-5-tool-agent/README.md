@@ -22,7 +22,7 @@ pip install -r requirements.txt
 ollama pull qwen2.5:7b-instruct
 ollama serve  # 默认 http://localhost:11434/v1
 
-# 生成自建评测任务集（已内置在脚本里）
+# 生成自建评测任务集和本地文件检索夹具
 python data/download.py
 ```
 
@@ -55,7 +55,7 @@ python eval/run.py
 | 测试 | 通过标准 |
 |---|---|
 | `tools_individual` | 4 个工具各自跑一组单元测试全部通过 |
-| `multi_tool_success_rate` | 在自建 10 题任务集（`data/tasks.json`）上成功率 > 60% |
+| `multi_tool_success_rate` | 在自建 10 题任务集（`data/tasks.json`）上答案关键词 / 同义词组命中率 > 60%；不信任 agent 自报 `success` |
 | `error_recovery` | 注入 1 次错误工具响应后，agent 仍能完成任务的比例 > 40% |
 
 ## AI Tutor 反馈

@@ -1,4 +1,6 @@
 data/cache/
+data/tasks.json
+data/agent-fixtures/
 src/__pycache__/
 src/tools/__pycache__/
 eval/__pycache__/
