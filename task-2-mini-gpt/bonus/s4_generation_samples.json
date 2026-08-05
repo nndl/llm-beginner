@@ -1,0 +1,25 @@
+{
+  "prompt": "Once upon a time",
+  "samples": [
+    {
+      "strategy": "greedy",
+      "text": "Once upon a time, there was a little girl named Lily. She loved to play with his mom said, \"Thank you make a back to the back to the back to the back to the back to the back to the back to the back to the back to the ba"
+    },
+    {
+      "strategy": "top_k=3, temperature=0.3",
+      "text": "Once upon a time, there was a little girl named Lily. One day, Lily's mom said, \"Thank you down you mom said, \"You we you make a back you mom said, \"I we you make you you mom said, \"You we you y"
+    },
+    {
+      "strategy": "top_p=0.5, temperature=0.3",
+      "text": "Once upon a time, there was a little girl named Lily. She loved to play with his mom said, \"I we you you make a big friends. It was so happy and sharked his mom said, \"Thank you make a back to the back to "
+    },
+    {
+      "strategy": "temperature=0.5 (适度随机)",
+      "text": "Once upon a time, there was a little girl named Lily. Jack was so happy. One day, Mia was a balle girl named Lily named Jack wanted to shark with his mom saw his mom said, \"Let's family. He was steep "
+    },
+    {
+      "strategy": "temperature=0.3 (更保守)",
+      "text": "Once upon a time, there was a little girl named Lily. One day, Lily's mom said, \"Max said, \"I will not it you will not anyone. You was so happy to explore and said, \"Thank you don't back you make a exc"
+    }
+  ]
+}

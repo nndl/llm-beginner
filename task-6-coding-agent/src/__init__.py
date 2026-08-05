@@ -1,0 +1,1 @@
+"""Components for the task-six local coding agent."""

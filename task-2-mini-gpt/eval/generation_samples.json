@@ -1,0 +1,25 @@
+{
+  "prompt": "Once upon a time",
+  "samples": [
+    {
+      "strategy": "greedy",
+      "text": "Once upon a time, there was a little girl named Lily. She loved to play with her friends and show her mom was very happy. One day, she went to the park with her mom and dad. She "
+    },
+    {
+      "strategy": "top_k=3, temperature=0.3",
+      "text": "Once upon a time, there was a little girl named Lily. She loved to play with her friends and smiled. One day, she went to the park with her mom to her mom. She saw something sp"
+    },
+    {
+      "strategy": "top_p=0.5, temperature=0.3",
+      "text": "Once upon a time, there was a little girl named Lily. She loved to play with her friends and show her mom said that she was so happy. She was so happy that she had to be careful and "
+    },
+    {
+      "strategy": "temperature=0.5 (适度随机)",
+      "text": "Once upon a time, there was a little boy named Timmy. Timmy loved to play with his friends. Timmy liked to play with his toys, but they did not want to be scared. He "
+    },
+    {
+      "strategy": "temperature=0.3 (更保守)",
+      "text": "Once upon a time, there was a little girl named Lily. She loved to play with her friends and smiled. One day, she went to the park with her mom to her mom. She saw something sp"
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "task": "S4: SFT-only vs SFT+DPO preference comparison",
+  "pairs": 2,
+  "sft_chosen_minus_rejected": [
+    -8.0,
+    -29.5
+  ],
+  "dpo_chosen_minus_rejected": [
+    -6.0,
+    -29.5
+  ],
+  "mean_sft_margin": -18.75,
+  "mean_dpo_margin": -17.75,
+  "dpo_training_reward_margins": [
+    0.0,
+    0.5
+  ],
+  "curve": "eval/reward_margin.svg"
+}

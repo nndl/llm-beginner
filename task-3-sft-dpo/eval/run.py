@@ -12,6 +12,12 @@ LORA_MAX_TRAINABLE_RATIO = 0.05   # LoRA 可训练参数占比上限
 MASK_RATIO_RANGE = (0.2, 0.9)     # loss mask 比例的合理区间（过低/过高都说明 mask 写错）
 
 
+def has_model_weights(model_path: Path) -> bool:
+    """Qwen 的 config/tokenizer 已下载但权重中断时，不把它误判成可加载模型。"""
+    return any((model_path / name).exists()
+               for name in ("model.safetensors", "pytorch_model.bin", "model.safetensors.index.json"))
+
+
 def test_lora_param_count():
     try:
         from transformers import AutoModelForCausalLM
@@ -21,9 +27,9 @@ def test_lora_param_count():
     from src.lora import inject_lora
 
     model_path = ROOT / "models" / "Qwen2.5-0.5B"
-    if not model_path.exists():
+    if not model_path.exists() or not has_model_weights(model_path):
         return {"test": "lora_param_count", "pass": None,
-                "skip": "models/Qwen2.5-0.5B 不存在"}
+                "skip": "models/Qwen2.5-0.5B 缺少完整模型权重；重新运行 data/download.py"}
     model = AutoModelForCausalLM.from_pretrained(str(model_path))
     inject_lora(model, target_modules=["q_proj", "v_proj"], r=8, alpha=16)
     trainable = sum(p.numel() for p in model.parameters() if p.requires_grad)

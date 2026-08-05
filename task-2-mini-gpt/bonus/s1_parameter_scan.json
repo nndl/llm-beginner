@@ -1,0 +1,31 @@
+{
+  "dataset": "tinystories",
+  "vocab_size": 300,
+  "block_size": 128,
+  "batch_size": 1,
+  "runs": [
+    {
+      "name": "10m",
+      "parameters": 9611776,
+      "max_iters": 3000,
+      "best_dev_perplexity": 6.1542,
+      "checkpoint": "bonus/s4_tinystories_10m/best.pt",
+      "note": "Shared with the S4 TinyStories experiment."
+    },
+    {
+      "name": "50m",
+      "parameters": 49847040,
+      "max_iters": 3000,
+      "best_dev_perplexity": 7.8692,
+      "checkpoint": "bonus/s1/50m/best.pt"
+    },
+    {
+      "name": "100m",
+      "parameters": 101079040,
+      "max_iters": 800,
+      "best_dev_perplexity": 12.59,
+      "checkpoint": "bonus/s1/100m/best.pt",
+      "note": "CPU run was stopped after the saved step-800 checkpoint; it is not directly comparable to the 3,000-step runs."
+    }
+  ]
+}

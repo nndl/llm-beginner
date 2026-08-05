@@ -13,3 +13,16 @@ venv/
 
 # Claude Code 工具产物（agent worktree、session 等，勿入公开仓库）
 .claude/
+
+# 忽略所有数据集和模型权重文件
+*.jsonl
+*.bin
+*.pth
+*.pt
+*.safetensors
+# 或者直接忽略整个 data 文件夹（如果你不需要提交数据）
+*/data/**.jsonl
+*.bin
+*.pt
+*.pth
+*/data/*

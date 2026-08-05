@@ -1,0 +1,32 @@
+[
+  {
+    "variant": "base",
+    "prompt": "Explain why exercise is good for health.",
+    "response": "Explain why exercise is good for health.鲕\n鲕\nExplain why exercise is good for health.鲕\n鲕\nExplain why exercise is good for health.鲕\n鲕\nExplain why exercise is good for health.鲕\n鲕\nExplain why exercise is good for health.鲕\n鲕"
+  },
+  {
+    "variant": "base",
+    "prompt": "请用三点解释什么是深度学习。",
+    "response": "深度学习是一种人工智能技术，它使用神经网络来模拟人类的思维过程。神经网络是一种模拟人类大脑的结构和功能的模型，它通过学习数据来自动地识别模式和特征。深度学习可以应用于许多领域，包括图像识别、自然语言处理、语音识别、推荐系统等。"
+  },
+  {
+    "variant": "sft",
+    "prompt": "Explain why exercise is good for health.",
+    "response": "Exercise is good for health because it helps to maintain a healthy weight, improve cardiovascular health, and reduce the risk of chronic diseases such as heart disease, diabetes, and obesity. Regular exercise also helps to improve mental health by reducing stress, anxiety, and depression. Additionally, exercise can help to improve overall physical fitness and strength"
+  },
+  {
+    "variant": "sft",
+    "prompt": "请用三点解释什么是深度学习。",
+    "response": "深度学习是一种人工智能技术，它使用神经网络来模拟人类大脑的工作方式。深度学习可以自动地从数据中学习模式和规律，从而实现各种任务，如图像识别、语音识别、自然语言处理等。深度学习的核心是通过训练大量的数据来建立模型，然后使用这些模型来"
+  },
+  {
+    "variant": "dpo",
+    "prompt": "Explain why exercise is good for health.",
+    "response": "Exercise is good for health because it helps to maintain a healthy weight, improve cardiovascular health, and reduce the risk of chronic diseases such as heart disease, diabetes, and obesity. Regular exercise also helps to improve mental health by reducing stress, anxiety, and depression. Additionally, exercise can help to improve overall physical fitness and strength"
+  },
+  {
+    "variant": "dpo",
+    "prompt": "请用三点解释什么是深度学习。",
+    "response": "深度学习是一种人工智能技术，它使用神经网络来模拟人类大脑的工作方式。深度学习可以自动地从数据中学习模式和规律，从而实现各种任务，如图像识别、语音识别、自然语言处理等。深度学习的核心是通过大量的数据训练模型，使得模型能够自动地从数据"
+  }
+]
