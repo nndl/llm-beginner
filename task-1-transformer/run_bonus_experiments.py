@@ -53,7 +53,8 @@ EXPERIMENTS = [
         "name": "s4_rope",
         "bonus": "S4",
         "description": "replace absolute PE with RoPE",
-        "args": ["--position_encoding", "rope"],
+        "script": "train_rope.py",
+        "args": [],
     },
 ]
 
@@ -72,7 +73,7 @@ def main():
     for experiment in selected:
         output_dir = results_dir / experiment["name"]
         command = [
-            sys.executable, str(ROOT / "train.py"), "--epochs", str(args.epochs),
+            sys.executable, str(ROOT / experiment.get("script", "train.py")), "--epochs", str(args.epochs),
             "--output_dir", str(output_dir), *experiment["args"],
         ]
         print(f"\n=== {experiment['name']} ===")

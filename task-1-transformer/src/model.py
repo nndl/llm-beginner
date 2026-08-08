@@ -44,14 +44,10 @@ class TransformerClassifier(nn.Module):
         pad_id: int = PAD_ID,      # padding 的 token id
         use_residual: bool = True,     # 是否使用残差连接（消融实验开关）
         use_layernorm: bool = True,    # 是否使用 LayerNorm（消融实验开关）
-        position_encoding: str = "absolute",
     ):
         super().__init__()
         self.pad_id = pad_id  # 记录 pad id，供后续生成 padding mask 用
         self.max_len = max_len  # 记录最大长度
-        if position_encoding not in {"absolute", "rope"}:
-            raise ValueError("position_encoding must be 'absolute' or 'rope'")
-        self.position_encoding = position_encoding
 
         self.embedding = nn.Embedding(vocab_size, d_model, padding_idx=pad_id)
         # 字符 id -> 向量；padding_idx 指定的行永远保持 0 向量且不参与梯度更新
@@ -64,8 +60,6 @@ class TransformerClassifier(nn.Module):
                     d_model, n_heads, d_ff, dropout=dropout,
                     use_residual=use_residual,
                     use_layernorm=use_layernorm,
-                    use_rope=position_encoding == "rope",
-                    max_len=max_len,
                 )
                 for _ in range(n_layers)  # 按 n_layers 堆叠多个相同结构的 TransformerBlock
             ]
@@ -84,8 +78,7 @@ class TransformerClassifier(nn.Module):
         mask = self._make_padding_mask(ids)  # 生成 padding mask，屏蔽掉 pad 位置的 attention
 
         x = self.embedding(ids)  # (B, T) -> (B, T, d_model)，字符 id 转向量
-        if self.position_encoding == "absolute":
-            x = self.pos_encoding(x)  # 叠加位置编码，注入序列顺序信息
+        x = self.pos_encoding(x)  # 叠加位置编码，注入序列顺序信息
         x = self.emb_dropout(x)  # 对 embedding+位置编码结果做 dropout
 
         for block in self.blocks:  # 依次经过每一层 TransformerBlock
@@ -119,7 +112,6 @@ def load_for_eval(ckpt_path: str):
         pad_id=config.get("pad_id", PAD_ID),  # 兼容旧 checkpoint：没存 pad_id 时用默认值
         use_residual=config.get("use_residual", True),
         use_layernorm=config.get("use_layernorm", True),
-        position_encoding=config.get("position_encoding", "absolute"),
     )
     model.load_state_dict(ckpt["state_dict"])  # 加载训练好的权重
     model.eval()  # 切换到 eval 模式（关闭 dropout、BN 用运行统计量等）

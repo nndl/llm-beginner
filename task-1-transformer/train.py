@@ -78,7 +78,6 @@ def main():
     parser.add_argument("--max_vocab_size", type=int, default=6000)
     parser.add_argument("--patience", type=int, default=3, help="dev acc 连续多少个 epoch 不提升就 early stop")
     parser.add_argument("--seed", type=int, default=42)
-    parser.add_argument("--position_encoding", choices=["absolute", "rope"], default="absolute")
     parser.add_argument("--no_residual", action="store_true")
     parser.add_argument("--no_layernorm", action="store_true")
     parser.add_argument("--output_dir", type=Path, default=ROOT)
@@ -112,7 +111,6 @@ def main():
         pad_id=PAD_ID,
         use_residual=not args.no_residual,
         use_layernorm=not args.no_layernorm,
-        position_encoding=args.position_encoding,
     ).to(device)
 
     n_params = sum(p.numel() for p in model.parameters())
@@ -179,7 +177,6 @@ def main():
                         "pad_id": PAD_ID,
                         "use_residual": not args.no_residual,
                         "use_layernorm": not args.no_layernorm,
-                        "position_encoding": args.position_encoding,
                     },
                 },
                 ckpt_dir / "best.pt",

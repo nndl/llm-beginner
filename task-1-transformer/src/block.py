@@ -13,16 +13,12 @@ class TransformerBlock(nn.Module):
         dropout: float = 0.1,          # dropout 概率
         use_residual: bool = True,     # 是否使用残差连接（消融实验开关）
         use_layernorm: bool = True,    # 是否使用 LayerNorm（消融实验开关）
-        use_rope: bool = False,
-        max_len: int = 512,
     ):
         super().__init__()
         self.use_residual = use_residual      # 记录是否启用残差连接
         self.use_layernorm = use_layernorm    # 记录是否启用 LayerNorm
 
-        self.attn = MultiHeadAttention(
-            d_model, n_heads, dropout=dropout, use_rope=use_rope, max_len=max_len
-        )
+        self.attn = MultiHeadAttention(d_model, n_heads, dropout=dropout)
         self.norm1 = nn.LayerNorm(d_model) if use_layernorm else nn.Identity()
         # 注意力子层后的归一化；关闭时用 Identity（恒等映射）占位，保持代码结构一致
         self.dropout1 = nn.Dropout(dropout)  # 注意力输出上的 dropout

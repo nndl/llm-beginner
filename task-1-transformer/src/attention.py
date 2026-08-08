@@ -5,16 +5,8 @@ import torch
 import torch.nn as nn
 
 
-def apply_rope(x: torch.Tensor, cos: torch.Tensor, sin: torch.Tensor) -> torch.Tensor:
-    x_even = x[..., 0::2]
-    x_odd = x[..., 1::2]
-    rotated = torch.stack((-x_odd, x_even), dim=-1).flatten(-2)
-    return x * cos + rotated * sin
-
-
 def scaled_dot_product_attention(Q, K, V, mask=None, attn_weights_out=None):
     """缩放点积注意力。
-
     Args:
         Q, K, V: 形状 (B, H, T, D)
         mask: 形状可广播到 (B, H, T_q, T_k)，`True` 表示该位置被屏蔽（不参与 attention）
@@ -33,7 +25,7 @@ def scaled_dot_product_attention(Q, K, V, mask=None, attn_weights_out=None):
     if mask is not None:
         # 用 -inf 填充而不是乘 0：乘 0 在 softmax 之后仍会留下非零概率（泄漏）
         scores = scores.masked_fill(mask, float("-inf"))
-        # mask 为 True 的位置全部设为 -inf，softmax 后这些位置的权重会趋近于 0
+        # mask 为 True 的位置全部设为 -inf，softmax 后这些位置的权重会趋近于 0，表示对该位置做掩码处理，在生成输出时不使用该位置的信息
 
     weights = torch.softmax(scores, dim=-1)
     # 在最后一维（T_k，即 key 的时间步）上做 softmax，得到每个 query 对所有 key 的归一化权重
@@ -49,29 +41,13 @@ def scaled_dot_product_attention(Q, K, V, mask=None, attn_weights_out=None):
 class MultiHeadAttention(nn.Module):
     """多头注意力：拼分 head + Q/K/V 投影 + 输出投影。"""
 
-    def __init__(self, d_model: int, n_heads: int, dropout: float = 0.0,
-                 use_rope: bool = False, max_len: int = 512):
+    def __init__(self, d_model: int, n_heads: int, dropout: float = 0.0):
         super().__init__()
         assert d_model % n_heads == 0, "d_model 必须能被 n_heads 整除"
         # 每个 head 的维度必须是整数，否则无法均匀切分
         self.d_model = d_model  # 总的隐藏维度
         self.n_heads = n_heads  # 头数
         self.d_k = d_model // n_heads  # 每个 head 分到的维度
-        self.use_rope = use_rope
-
-        if use_rope:
-            if self.d_k % 2 != 0:
-                raise ValueError("RoPE requires an even per-head dimension")
-            positions = torch.arange(max_len, dtype=torch.float).unsqueeze(1)
-            frequencies = torch.exp(
-                torch.arange(0, self.d_k, 2, dtype=torch.float)
-                * (-math.log(10000.0) / self.d_k)
-            )
-            angles = positions * frequencies
-            cos = torch.repeat_interleave(torch.cos(angles), 2, dim=-1)
-            sin = torch.repeat_interleave(torch.sin(angles), 2, dim=-1)
-            self.register_buffer("rope_cos", cos.unsqueeze(0).unsqueeze(0))
-            self.register_buffer("rope_sin", sin.unsqueeze(0).unsqueeze(0))
 
         self.q_proj = nn.Linear(d_model, d_model)  # 生成 Query 的线性投影
         self.k_proj = nn.Linear(d_model, d_model)  # 生成 Key 的线性投影
@@ -105,11 +81,6 @@ class MultiHeadAttention(nn.Module):
         Q = self._split_heads(self.q_proj(x))  # 线性投影后切分成多头，得到 (B, H, T, d_k)
         K = self._split_heads(self.k_proj(x))  # 同上，K 的多头形式
         V = self._split_heads(self.v_proj(x))  # 同上，V 的多头形式
-
-        if self.use_rope:
-            T = x.size(1)
-            Q = apply_rope(Q, self.rope_cos[:, :, :T], self.rope_sin[:, :, :T])
-            K = apply_rope(K, self.rope_cos[:, :, :T], self.rope_sin[:, :, :T])
 
         weights_container = []  # 用于接收 attention 权重（供可视化）的容器
         context = scaled_dot_product_attention(
