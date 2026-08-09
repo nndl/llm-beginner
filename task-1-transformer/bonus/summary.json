@@ -28,6 +28,13 @@
     "epochs_run": 8
   },
   {
+    "name": "s2_without_layernorm",
+    "bonus": "S2",
+    "description": "remove LayerNorm",
+    "best_dev_acc": 0.8742,
+    "epochs_run": 8
+  },
+  {
     "name": "s3_wider_model",
     "bonus": "S3",
     "description": "d_model=192, n_heads=6, n_layers=4, d_ff=768",

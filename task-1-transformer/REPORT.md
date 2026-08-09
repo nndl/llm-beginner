@@ -34,7 +34,7 @@
 
 ### S2：移除 residual 或 LayerNorm
 
-训练接口提供 `--no_residual` 与 `--no_layernorm` 两个开关。移除 residual 的完整 8 轮实验达到 0.8658，低于基线 0.34 个百分点，且第 5 轮后不再提升，证明该模型仍可收敛但泛化与收敛稳定性变差。记录位于 `bonus/s2_without_residual`。移除 LayerNorm 的首轮仅达到 0.7800，且在当前 CPU 环境中出现异常缓慢的单轮耗时，因此未将其纳入可比较的完整曲线。
+训练接口提供 `--no_residual` 与 `--no_layernorm` 两个开关。移除 residual 的完整 8 轮实验达到 0.8658，低于基线 0.34 个百分点，且第 5 轮后不再提升。移除 LayerNorm 的完整 8 轮实验首轮为 0.7800，随后持续收敛，最终达到 0.8742。两组实验均证明该小规模分类任务仍可收敛；本次配置下，移除 residual 的泛化表现更弱。记录位于 `bonus/s2_without_residual` 和 `bonus/s2_without_layernorm`。
 
 ### S3：强结果（dev accuracy > 0.88）
 
