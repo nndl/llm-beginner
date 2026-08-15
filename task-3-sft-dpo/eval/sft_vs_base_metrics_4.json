@@ -1,0 +1,46 @@
+{
+  "data": "D:\\github\\llm-beginner\\task-3-sft-dpo\\data\\moss-sft\\extracted\\moss-003-sft-no-tools.jsonl",
+  "max_samples": 4,
+  "effective_samples": 2,
+  "skipped_zero_assistant": 78,
+  "max_length": 128,
+  "device": "cpu",
+  "base": {
+    "assistant_tokens": 65,
+    "mean_nll": 1.4,
+    "ppl": 4.0552
+  },
+  "sft": {
+    "assistant_tokens": 65,
+    "mean_nll": 1.423077,
+    "ppl": 4.14987
+  },
+  "delta": {
+    "mean_nll_base_minus_sft": -0.023077,
+    "ppl_base_minus_sft": -0.09467
+  },
+  "sample_winrate": {
+    "sft_better_count": 0,
+    "tie_count": 1,
+    "base_better_count": 1,
+    "sft_better_rate": 0.0
+  },
+  "per_sample": [
+    {
+      "sample_id": 1,
+      "assistant_tokens": 41,
+      "base_nll": 1.256098,
+      "sft_nll": 1.292683,
+      "delta_base_minus_sft": -0.036585,
+      "verdict": "base_better"
+    },
+    {
+      "sample_id": 2,
+      "assistant_tokens": 24,
+      "base_nll": 1.645833,
+      "sft_nll": 1.645833,
+      "delta_base_minus_sft": 0.0,
+      "verdict": "tie"
+    }
+  ]
+}

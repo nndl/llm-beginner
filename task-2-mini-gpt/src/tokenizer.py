@@ -89,7 +89,7 @@ class BPETokenizer:
                 break
             pair = max(counts, key=counts.get)  # 选择频率最高的相邻 pair
             new_id = 256 + i  # 新 token id 按训练轮次连续分配，编码时也代表优先级
-            ids = _merge(ids, pair, new_id)
+            ids = _merge(ids, pair, new_id) # 将序列中的id替换为merge后的
             merges[pair] = new_id
             vocab[new_id] = vocab[pair[0]] + vocab[pair[1]]
             if verbose and (i + 1) % 50 == 0:
