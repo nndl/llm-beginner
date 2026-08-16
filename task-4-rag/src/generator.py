@@ -1,4 +1,18 @@
 """Context-grounded answer generation through an optional OpenAI-compatible server."""
+# 模块说明：
+# 通过一个可选的、兼容 OpenAI API 格式的服务，
+# 根据检索得到的上下文资料生成回答。
+#
+# 这里的核心思路是：
+# 用户问题 query
+#       +
+# 检索得到的 sources
+#       ↓
+# 拼接成 prompt
+#       ↓
+# 调用本地/远程大模型 API
+#       ↓
+# 返回基于上下文生成的回答
 from __future__ import annotations
 
 import os
