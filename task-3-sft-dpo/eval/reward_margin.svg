@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="360" viewBox="0 0 720 360">
+<rect width="720" height="360" fill="#f8fafc"/>
+<text x="48" y="28" font-family="sans-serif" font-size="18">DPO reward margin by update</text>
+<line x1="48" y1="312" x2="672" y2="312" stroke="#334155"/>
+<line x1="48" y1="48" x2="48" y2="312" stroke="#334155"/>
+<polyline fill="none" stroke="#0f766e" stroke-width="3" points="48.0,312.0 672.0,48.0"/>
+<text x="4" y="53" font-family="sans-serif" font-size="12">0.500</text>
+<text x="4" y="317" font-family="sans-serif" font-size="12">0.000</text>
+<text x="48" y="344" font-family="sans-serif" font-size="12">DPO optimizer update</text>
+</svg>

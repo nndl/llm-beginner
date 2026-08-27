@@ -1,0 +1,40 @@
+{
+  "prompt": "Once upon a time",
+  "seed": 42,
+  "max_new_tokens": 128,
+  "repetition_metric": "repeated 3-grams / all 3-grams; lower is better",
+  "samples": [
+    {
+      "strategy": "greedy",
+      "temperature": 0.0,
+      "top_k": null,
+      "top_p": null,
+      "repetition_3gram": 0.0185,
+      "text": "Once upon a time, there was a little girl named Lily. She loved to play with her friends and show her mom was very happy. One day, she went to the park with her mom and dad. She was so happy that she could not find it. She was s"
+    },
+    {
+      "strategy": "temperature=0.5（推荐随机采样）",
+      "temperature": 0.5,
+      "top_k": null,
+      "top_p": null,
+      "repetition_3gram": 0.0408,
+      "text": "Once upon a time, there was a little boy named Timmy. Timmy loved to play with his friends. Timmy liked to play with his toys, but they did not want to be scared. He wanted to go to the store and felt so happy.\n\nOnc"
+    },
+    {
+      "strategy": "top_k=5, temperature=0.5",
+      "temperature": 0.5,
+      "top_k": 5,
+      "top_p": null,
+      "repetition_3gram": 0.0612,
+      "text": "Once upon a time, there was a little boy named Timmy. Timmy loved to play with his friends. Timmy liked to play with his toys, but they did not want to be scared. He wanted to go to the park with his toys in the ba"
+    },
+    {
+      "strategy": "top_p=0.6, temperature=0.5",
+      "temperature": 0.5,
+      "top_k": null,
+      "top_p": 0.6,
+      "repetition_3gram": 0.0816,
+      "text": "Once upon a time, there was a little girl named Lily. She loved to play with her friends and see the box in the park. One day, she went to the park with her friends and she would be careful and play with her friends. One "
+    }
+  ]
+}

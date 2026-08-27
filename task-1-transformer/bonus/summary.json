@@ -1,0 +1,52 @@
+[
+  {
+    "name": "s1_heads_2_layers_2",
+    "bonus": "S1",
+    "description": "2 heads, 2 layers",
+    "best_dev_acc": 0.8558,
+    "epochs_run": 8
+  },
+  {
+    "name": "s1_heads_4_layers_4",
+    "bonus": "S1",
+    "description": "4 heads, 4 layers (baseline)",
+    "best_dev_acc": 0.8692,
+    "epochs_run": 8
+  },
+  {
+    "name": "s1_heads_8_layers_4",
+    "bonus": "S1",
+    "description": "8 heads, 4 layers",
+    "best_dev_acc": 0.87,
+    "epochs_run": 8
+  },
+  {
+    "name": "s2_without_residual",
+    "bonus": "S2",
+    "description": "remove residual connections",
+    "best_dev_acc": 0.8658,
+    "epochs_run": 8
+  },
+  {
+    "name": "s2_without_layernorm",
+    "bonus": "S2",
+    "description": "remove LayerNorm",
+    "best_dev_acc": 0.8742,
+    "epochs_run": 8
+  },
+  {
+    "name": "s3_wider_model",
+    "bonus": "S3",
+    "description": "d_model=192, n_heads=6, n_layers=4, d_ff=768",
+    "best_dev_acc": 0.8942,
+    "best_epoch": 12,
+    "checkpoint": "s3_wider_model/ckpt/best.pt"
+  },
+  {
+    "name": "s4_rope",
+    "bonus": "S4",
+    "description": "replace absolute positional encoding with RoPE",
+    "best_dev_acc": 0.87,
+    "epochs_run": 8
+  }
+]

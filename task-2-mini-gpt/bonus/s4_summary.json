@@ -1,0 +1,6 @@
+{
+  "parameters": 9611776,
+  "best_dev_perplexity": 6.1542,
+  "checkpoint": "bonus\\s4_tinystories_10m\\best.pt",
+  "samples": "bonus\\s4_generation_samples.json"
+}

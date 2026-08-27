@@ -1,0 +1,95 @@
+{
+  "data": "D:\\github\\llm-beginner\\task-3-sft-dpo\\data\\moss-sft\\extracted\\moss-003-sft-no-tools.jsonl",
+  "max_samples": 8,
+  "effective_samples": 8,
+  "skipped_zero_assistant": 0,
+  "skip_records": 0,
+  "max_length": 512,
+  "device": "cpu",
+  "base": {
+    "assistant_tokens": 2841,
+    "mean_nll": 1.220345,
+    "ppl": 3.388356
+  },
+  "sft": {
+    "assistant_tokens": 2841,
+    "mean_nll": 1.174234,
+    "ppl": 3.235665
+  },
+  "delta": {
+    "mean_nll_base_minus_sft": 0.046111,
+    "ppl_base_minus_sft": 0.152691
+  },
+  "sample_winrate": {
+    "sft_better_count": 8,
+    "tie_count": 0,
+    "base_better_count": 0,
+    "sft_better_rate": 1.0
+  },
+  "per_sample": [
+    {
+      "sample_id": 1,
+      "assistant_tokens": 404,
+      "base_nll": 1.425743,
+      "sft_nll": 1.356436,
+      "delta_base_minus_sft": 0.069307,
+      "verdict": "sft_better"
+    },
+    {
+      "sample_id": 2,
+      "assistant_tokens": 284,
+      "base_nll": 0.81338,
+      "sft_nll": 0.788732,
+      "delta_base_minus_sft": 0.024648,
+      "verdict": "sft_better"
+    },
+    {
+      "sample_id": 3,
+      "assistant_tokens": 251,
+      "base_nll": 1.290837,
+      "sft_nll": 1.266932,
+      "delta_base_minus_sft": 0.023904,
+      "verdict": "sft_better"
+    },
+    {
+      "sample_id": 4,
+      "assistant_tokens": 238,
+      "base_nll": 1.403361,
+      "sft_nll": 1.302521,
+      "delta_base_minus_sft": 0.10084,
+      "verdict": "sft_better"
+    },
+    {
+      "sample_id": 5,
+      "assistant_tokens": 443,
+      "base_nll": 1.074492,
+      "sft_nll": 1.03386,
+      "delta_base_minus_sft": 0.040632,
+      "verdict": "sft_better"
+    },
+    {
+      "sample_id": 6,
+      "assistant_tokens": 399,
+      "base_nll": 1.56391,
+      "sft_nll": 1.513784,
+      "delta_base_minus_sft": 0.050125,
+      "verdict": "sft_better"
+    },
+    {
+      "sample_id": 7,
+      "assistant_tokens": 371,
+      "base_nll": 1.245283,
+      "sft_nll": 1.207547,
+      "delta_base_minus_sft": 0.037736,
+      "verdict": "sft_better"
+    },
+    {
+      "sample_id": 8,
+      "assistant_tokens": 451,
+      "base_nll": 0.97561,
+      "sft_nll": 0.944568,
+      "delta_base_minus_sft": 0.031042,
+      "verdict": "sft_better"
+    }
+  ]
+}

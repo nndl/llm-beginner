@@ -120,9 +120,43 @@ def test_multi_tool_success_rate():
 
 
 def test_error_recovery():
-    """注入错误工具响应（暂为可选；学生需要实现 src/agent.py 的 inject_error 钩子）。"""
-    return {"test": "error_recovery", "pass": None,
-            "skip": "需要学生实现 inject_error 测试钩子；可选实验"}
+    """S4：注入一次工具故障后，验证 agent 能记录错误并完成任务。"""
+    from src.agent import ReActAgent
+
+    tasks_path = ROOT / "data" / "tasks.json"
+    if not tasks_path.exists():
+        return {"test": "error_recovery", "pass": None,
+                "skip": "data/tasks.json 不存在；跑 data/download.py 生成"}
+
+    task_ids = {1, 5, 8}
+    tasks = [task for task in json.loads(tasks_path.read_text(encoding="utf-8"))
+             if task["id"] in task_ids]
+    details = []
+    recovered = 0
+    for task in tasks:
+        try:
+            trace = ReActAgent(inject_error=True).run(task["task"])
+            steps = trace.get("steps", [])
+            error_index = next((index for index, step in enumerate(steps)
+                                if "Injected one-time tool failure" in str(step.get("observation", ""))),
+                               None)
+            retried = error_index is not None and any(
+                "Tool error" not in str(step.get("observation", ""))
+                for step in steps[error_index + 1:]
+            )
+            answer_ok = answer_matches(trace.get("final_answer", ""),
+                                       task["expected_answer_contains"])
+            success = retried and answer_ok
+            recovered += int(success)
+            details.append({"id": task["id"], "success": success,
+                            "answer_ok": answer_ok, "retried": retried,
+                            "final_answer_preview": str(trace.get("final_answer", ""))[:120]})
+        except Exception as error:
+            details.append({"id": task["id"], "success": False, "error": str(error)})
+
+    rate = recovered / len(tasks) if tasks else 0
+    return {"test": "error_recovery", "pass": rate > 0.4,
+            "rate": round(rate, 3), "n": len(tasks), "details": details}
 
 
 if __name__ == "__main__":

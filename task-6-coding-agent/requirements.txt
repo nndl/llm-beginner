@@ -1,4 +1,4 @@
-mcp>=0.9             # 官方 MCP Python SDK
+mcp>=0.9,<2          # FastMCP stdio API；MCP 2.0 移除了该导入路径
 openai>=1.30         # 调本地模型的 OpenAI 兼容客户端
 gitpython>=3.1
 pytest>=7.0

@@ -2,6 +2,8 @@
 import sys
 from pathlib import Path
 
+import torch
+
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))           # from src.* —— 学生实现
 sys.path.insert(0, str(ROOT.parent))    # from _eval_harness —— 共用运行壳
@@ -10,6 +12,13 @@ from _eval_harness import run_tests
 
 LORA_MAX_TRAINABLE_RATIO = 0.05   # LoRA 可训练参数占比上限
 MASK_RATIO_RANGE = (0.2, 0.9)     # loss mask 比例的合理区间（过低/过高都说明 mask 写错）
+SFT_BASE_MIN_MEAN_ABS_LOGIT_DIFF = 1e-6
+
+
+def has_model_weights(model_path: Path) -> bool:
+    """Qwen 的 config/tokenizer 已下载但权重中断时，不把它误判成可加载模型。"""
+    return any((model_path / name).exists()
+               for name in ("model.safetensors", "pytorch_model.bin", "model.safetensors.index.json"))
 
 
 def test_lora_param_count():
@@ -21,9 +30,9 @@ def test_lora_param_count():
     from src.lora import inject_lora
 
     model_path = ROOT / "models" / "Qwen2.5-0.5B"
-    if not model_path.exists():
+    if not model_path.exists() or not has_model_weights(model_path):
         return {"test": "lora_param_count", "pass": None,
-                "skip": "models/Qwen2.5-0.5B 不存在"}
+                "skip": "models/Qwen2.5-0.5B 缺少完整模型权重；重新运行 data/download.py"}
     model = AutoModelForCausalLM.from_pretrained(str(model_path))
     inject_lora(model, target_modules=["q_proj", "v_proj"], r=8, alpha=16)
     trainable = sum(p.numel() for p in model.parameters() if p.requires_grad)
@@ -74,14 +83,51 @@ def test_loss_masking():
 
 def test_sft_vs_base():
     sft_ckpt = ROOT / "ckpt" / "sft"
-    if not sft_ckpt.exists():
+    model_path = ROOT / "models" / "Qwen2.5-0.5B"
+    if not model_path.exists() or not has_model_weights(model_path):
         return {"test": "sft_vs_base", "pass": None,
-                "skip": "ckpt/sft 不存在"}
-    # 只校验 SFT 产物存在；输出质量需手动跑 src/compare.py 对比 base 与 SFT，并把结果附在提交里。
-    has_artifacts = sft_ckpt.is_dir() and any(sft_ckpt.iterdir())
+                "skip": "models/Qwen2.5-0.5B 缺少完整模型权重；重新运行 data/download.py"}
+    if not (sft_ckpt / "adapter_model.pt").exists() or not (sft_ckpt / "adapter_config.json").exists():
+        return {"test": "sft_vs_base", "pass": None,
+                "skip": "ckpt/sft 缺少 adapter_model.pt 或 adapter_config.json"}
+    try:
+        from transformers import AutoModelForCausalLM, AutoTokenizer
+    except ImportError:
+        return {"test": "sft_vs_base", "pass": None,
+                "skip": "transformers 未安装；先 pip install -r requirements.txt"}
+
+    from src.chat import format_prompt
+    from src.lora import inject_lora, load_lora
+    import json
+
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    tokenizer = AutoTokenizer.from_pretrained(str(model_path))
+    prompt = "Explain why exercise is good for health."
+    text = format_prompt([{"role": "user", "content": prompt}])
+    input_ids = tokenizer(text, return_tensors="pt").input_ids.to(device)
+
+    base = AutoModelForCausalLM.from_pretrained(str(model_path)).to(device).eval()
+    sft = AutoModelForCausalLM.from_pretrained(str(model_path)).to(device).eval()
+
+    cfg = json.loads((sft_ckpt / "adapter_config.json").read_text(encoding="utf-8"))
+    inject_lora(sft, cfg["target_modules"], r=cfg["r"], alpha=cfg["alpha"])
+    load_lora(sft, sft_ckpt)
+
+    with torch.no_grad():
+        base_logits = base(input_ids=input_ids).logits
+        sft_logits = sft(input_ids=input_ids).logits
+    mean_abs_diff = (base_logits - sft_logits).abs().mean().item()
+
+    del base
+    del sft
+    if device.type == "cuda":
+        torch.cuda.empty_cache()
+
     return {"test": "sft_vs_base",
-            "pass": has_artifacts,
-            "note": "仅校验 ckpt/sft 非空；输出质量请手动跑 src/compare.py 对比 base 与 SFT 并附在提交里"}
+            "pass": mean_abs_diff > SFT_BASE_MIN_MEAN_ABS_LOGIT_DIFF,
+            "mean_abs_logit_diff": round(mean_abs_diff, 8),
+            "threshold": SFT_BASE_MIN_MEAN_ABS_LOGIT_DIFF,
+            "note": "同一输入下 base 与 SFT logits 存在可测差异；文本质量仍需结合 src/compare.py 人工评估"}
 
 
 if __name__ == "__main__":

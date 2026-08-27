@@ -1,0 +1,68 @@
+{
+  "steps": [
+    {
+      "thought": "Load only the skill instructions relevant to the issue.",
+      "tool_call": {
+        "tool": "skills.match",
+        "task": "修复 `calculator.add` 的实现，使 `python -m pytest` 全部通过。不要改测试文件。"
+      },
+      "observation": {
+        "selected": ["test-runner"],
+        "loaded": {
+          "test-runner": "Run `python -m pytest -q` in the target repository. Treat a nonzero return code as an observation to diagnose; stop only after it passes or the task cannot proceed.\n"
+        }
+      }
+    },
+    {
+      "thought": "Delegate read-only diagnosis to an isolated code-search context.",
+      "tool_call": {
+        "tool": "subagent.code_search"
+      },
+      "observation": "calculator.add returns subtraction; change `a - b` to `a + b`."
+    },
+    {
+      "thought": "Use the local Qwen planner when configured; otherwise retain an offline plan.",
+      "tool_call": {
+        "tool": "local_model.plan",
+        "model": "qwen2.5-coder:7b-instruct"
+      },
+      "observation": "Offline deterministic planner selected for reproducible toy-repo evaluation."
+    },
+    {
+      "thought": "The issue and source identify subtraction in add; replace it with addition.",
+      "tool_call": {
+        "tool": "write_file",
+        "path": "calculator.py"
+      },
+      "observation": {
+        "ok": true,
+        "path": "calculator.py"
+      }
+    },
+    {
+      "thought": "A passing pytest run is the explicit completion signal.",
+      "tool_call": {
+        "tool": "subagent.test_runner"
+      },
+      "observation": {
+        "ok": true,
+        "returncode": 0,
+        "output": "3 passed"
+      }
+    },
+    {
+      "thought": "Capture the resulting patch for replay and review.",
+      "tool_call": {
+        "tool": "git_diff"
+      },
+      "observation": {
+        "ok": true,
+        "returncode": 0,
+        "output": "calculator.py: return a - b changed to return a + b"
+      }
+    }
+  ],
+  "patch": "data/toy-repo/fix.patch",
+  "tests_passed": true,
+  "skills": ["test-runner"]
+}

@@ -1,0 +1,12 @@
+{
+  "prompt": "Once upon a time",
+  "prompt_tokens": 11,
+  "new_tokens": 128,
+  "runs": 5,
+  "warmup": 1,
+  "device": "cpu",
+  "greedy_outputs_equal": true,
+  "cache_median_seconds": 0.243142,
+  "no_cache_median_seconds": 0.400866,
+  "speedup": 1.65
+}

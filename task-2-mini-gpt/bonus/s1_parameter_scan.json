@@ -1,0 +1,41 @@
+{
+  "dataset": "tinystories",
+  "vocab_size": 300,
+  "block_size": 128,
+  "batch_size": 16,
+  "runs": [
+    {
+      "name": "10m",
+      "parameters": 9611776,
+      "max_iters": 8000,
+      "actual_steps": 8000,
+      "best_dev_perplexity": 3.0831,
+      "final_dev_perplexity": 3.0831,
+      "wall_time_seconds": 6357.9,
+      "checkpoint": "D:\\github\\llm-beginner\\task-2-mini-gpt\\bonus\\s1\\10m\\best.pt",
+      "converged": false
+    },
+    {
+      "name": "50m",
+      "parameters": 49847040,
+      "max_iters": 8000,
+      "actual_steps": 8000,
+      "best_dev_perplexity": 2.8936,
+      "final_dev_perplexity": 2.8936,
+      "wall_time_seconds": 71009.9,
+      "checkpoint": "D:\\github\\llm-beginner\\task-2-mini-gpt\\bonus\\s1\\50m\\best.pt",
+      "converged": false
+    },
+    {
+      "name": "100m",
+      "parameters": 101079040,
+      "max_iters": 6000,
+      "actual_steps": 6000,
+      "best_dev_perplexity": 3.102,
+      "final_dev_perplexity": 3.15,
+      "wall_time_seconds": 263627.7,
+      "checkpoint": "D:\\github\\llm-beginner\\task-2-mini-gpt\\bonus\\s1\\100m\\best.pt",
+      "converged": false
+    }
+  ]
+}
