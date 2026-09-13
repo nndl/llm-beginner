@@ -22,8 +22,10 @@ def main():
     except ImportError:
         sys.exit("[错误] 缺少依赖：pip install datasets pyarrow")
 
-    print("正在下载 seamew/ChnSentiCorp ...")
-    ds = load_dataset("seamew/ChnSentiCorp", cache_dir=str(DATA_DIR / "cache"))
+    # seamew/ChnSentiCorp 仍依赖旧式数据集脚本，而 datasets 4.0+
+    # 已不再支持执行这类远程脚本。这个镜像提供相同的三个 Parquet 划分。
+    print("正在下载 lansinuote/ChnSentiCorp ...")
+    ds = load_dataset("lansinuote/ChnSentiCorp", cache_dir=str(DATA_DIR / "cache"))
 
     for split in ds.keys():
         out = DATA_DIR / f"{split}.parquet"
